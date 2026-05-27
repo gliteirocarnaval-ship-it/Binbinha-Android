@@ -22,7 +22,7 @@ def exibir_banner():
     print("\033[1;37m    MÓDULO FORENSE DEFCON - ANULAÇÃO TOTAL DE TRAPAÇAS    \033[0m")
     print("\033[1;30m ─────────────────────────────────────────────────────────\033[0m")
 
-def executar_cmd(comando, timeout_custom=15):
+def ejecutar_cmd(comando, timeout_custom=15):
     try:
         res = subprocess.run(comando, shell=True, capture_output=True, text=True, timeout=timeout_custom)
         return res.stdout.strip()
@@ -32,8 +32,8 @@ def executar_cmd(comando, timeout_custom=15):
 def animar_progresso(etapa, progresso_atual, total_etapas):
     porcentagem = int((progresso_atual / total_etapas) * 100)
     blocos = int(porcentagem / 5)
-    barra = "█" * blocos + "░" * (20 - blocks) if 'blocks' in locals() else "█" * blocks + "░" * (20 - blocks)
-    barra = "█" * interstate if 'interstate' in locals() else "█" * blocos + "░" * (20 - blocos)
+    # CORREÇÃO CRÍTICA: Corrigido de blocks/interstate para blocos
+    barra = "█" * blocos + "░" * (20 - blocos)
     
     exibir_banner()
     print(f"\n\033[1;34m [ {barra} ]  {porcentagem}%  {progresso_atual}/{total_etapas}\033[0m")
@@ -56,13 +56,13 @@ def emparelhar_adb():
     codigo = input("\033[1;36m➤ CÓDIGO de 6 dígitos gerado: \033[0m")
     
     print("\n\033[1;34m[+] Autenticando chaves RSA locais...\033[0m")
-    resultado = executar_cmd(f"adb pair 127.0.0.1:{porta} {codigo}")
+    resultado = ejecutar_cmd(f"adb pair 127.0.0.1:{porta} {codigo}")
     
     if "Successfully paired" in resultado or True:
         print("\033[1;32m[✓] SUCESSO: Chave criptográfica pareada!\033[0m")
         print("\n\033[1;33m[!] Último Passo:\033[0m")
         porta_conn = input("\033[1;36m➤ PORTA PRINCIPAL da tela de Depuração: \033[0m")
-        executar_cmd(f"adb connect 127.0.0.1:{porta_conn}")
+        ejecutar_cmd(f"adb connect 127.0.0.1:{porta_conn}")
         print("\033[1;32m[✓] Conexão estabelecida de Administrador!\033[0m")
         time.sleep(2)
     else:
@@ -74,40 +74,39 @@ def escanear_jogo(tipo_jogo):
         total = 13
         pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
         
-        # MÁSCARA SOCIAL: Termos disfarçados para manter o sigilo absoluto das novas defesas
+        # MÁSCARA SOCIAL: Phantom Protocol ativo (tudo oculto e disfarçado na tela)
         animar_progresso("Mapeando árvore de processos do Kernel", 1, total)
-        animar_progresso("Acessando privilégios e permissões de superusuário", 2, total) # Root Check
-        animar_progresso("Analisando registros de inicialização e persistência do Kernel", 3, total) # Uptime Check
+        animar_progresso("Acessando privilégios e permissões de superusuário", 2, total) 
+        animar_progresso("Analisando registros de inicialização e persistência do Kernel", 3, total) 
         animar_progresso("Acessando logs internos e integridade estrutural", 4, total)
         animar_progresso("Rastreando partições por Bypass e Injectors ativos", 5, total)
-        animar_progresso("Varrendo barramento de conexões USB e barramentos de mídia", 6, total) # MTP Check
-        animar_progresso("Verificando consistência física de Shaders e diretórios OBB", 7, total) # OBB Check
-        animar_progresso("Auditando metadados de contas secundárias e cache local", 8, total) # Metadata Check
+        animar_progresso("Varrendo barramento de conexões USB e barramentos de mídia", 6, total) 
+        animar_progresso("Verificando consistência física de Shaders e diretórios OBB", 7, total) 
+        animar_progresso("Auditando metadados de contas secundárias e cache local", 8, total) 
         animar_progresso("Buscando assinaturas de Regedit, Macro ou arquivos .lua", 9, total)
         animar_progresso("Varrendo histórico de Overlays e Clipboard do Android", 10, total)
         animar_progresso("Rastreando sockets de rede e pontes virtuais vinculadas", 11, total)
         animar_progresso("Auditando buffer de entrada I/O de pacotes externos", 12, total)
         animar_progresso("Validando integridade cronológica de mídias locais", 13, total)
         
-        modelo = executar_cmd("adb shell getprop ro.product.model") or "Dispositivo Android Local"
-        android_version = executar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
-        hwid = executar_cmd("adb shell getprop ro.serialno") or "N/A"
+        modelo = ejecutar_cmd("adb shell getprop ro.product.model") or "Dispositivo Android Local"
+        android_version = ejecutar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
+        hwid = ejecutar_cmd("adb shell getprop ro.serialno") or "N/A"
         
         # Alertas e Evidências Ocultas
         alertas_encontrados = 0
         detalhes_fraude = ""
 
-        # 1. NOVO: VERIFICAÇÃO DE ROOT (Magisk, su, KernelSU)
-        check_root = executar_cmd("adb shell 'which su || ls /system/xbin/su || ls /system/bin/su || pm list packages | grep -Ei \"magisk|kernelsu\"'")
+        # 1. VERIFICAÇÃO DE ROOT
+        check_root = ejecutar_cmd("adb shell 'which su || ls /system/xbin/su || ls /system/bin/su || pm list packages | grep -Ei \"magisk|kernelsu\"'")
         root_status = "✓ Padrão de Fábrica"
         if check_root or "su" in check_root:
             root_status = "⚠ Privilégio Modificado (ROOT)"
             alertas_encontrados += 1
             detalhes_fraude += f"[ROOT DETECTADO]: Binários administrativos ativos ({check_root[:30]})\n"
 
-        # 2. NOVO: VERIFICAÇÃO DE UP-TIME (Se reiniciou recentemente)
-        # Pega o uptime em segundos. Se for menor que 300 segundos (5 minutos), acende o alerta.
-        uptime_bruto = executar_cmd("adb shell cat /proc/uptime")
+        # 2. VERIFICAÇÃO DE UP-TIME (Se reiniciou nos últimos 5 min)
+        uptime_bruto = ejecutar_cmd("adb shell cat /proc/uptime")
         status_reboot = "✓ Inicialização Estabilizada"
         if uptime_bruto:
             segundos_ativos = float(uptime_bruto.split()[0])
@@ -116,29 +115,25 @@ def escanear_jogo(tipo_jogo):
                 alertas_encontrados += 1
                 detalhes_fraude += f"[UPTIME TRACE]: Sistema reiniciado há {int(segundos_ativos)} segundos. Possível queima de arquivos.\n"
 
-        # 3. NOVO: VERIFICAÇÃO DE ESTADO DO MTP / TRANSFERÊNCIA USB
-        # Verifica se a função MTP está ativa nos serviços de USB ou se há estado conectado
-        mtp_check = executar_cmd("adb shell 'getprop sys.usb.config && getprop sys.usb.state'")
+        # 3. VERIFICAÇÃO DE ESTADO DO MTP
+        mtp_check = ejecutar_cmd("adb shell 'getprop sys.usb.config && getprop sys.usb.state'")
         status_mtp = "✓ Canal Seguro"
         if "mtp" in mtp_check.lower() and "connected" in mtp_check.lower():
             status_mtp = "⚠ Linha de Transferência USB Aberta"
-            # Não gera alerta punitivo direto para evitar falsos positivos se o cara só estiver carregando, mas deixa o rastro no log técnico se houver outras fraudes
 
-        # 4. NOVO: ANÁLISE DE CONFIGURAÇÃO OBB E METADATA DO USUÁRIO
-        # Varre o tamanho dos arquivos na pasta OBB e busca modificações na pasta de metadados do perfil
+        # 4. ANÁLISE DE CONFIGURAÇÃO OBB E METADATA DO USUÁRIO
         obb_path = f"/sdcard/Android/obb/{pacote}/"
-        metadata_path = f"/sdcard/Android/data/{pacote}/files/main_metadata/" # Caminho genérico estrutural do jogo
+        metadata_path = f"/sdcard/Android/data/{pacote}/files/main_metadata/"
         
-        check_obb = executar_cmd(f"adb shell 'ls -lh {obb_path} 2>/dev/null'")
-        check_metadata = executar_cmd(f"adb shell 'ls -lh {metadata_path} 2>/dev/null'")
+        check_obb = ejecutar_cmd(f"adb shell 'ls -lh {obb_path} 2>/dev/null'")
+        check_metadata = ejecutar_cmd(f"adb shell 'ls -lh {metadata_path} 2>/dev/null'")
         
-        # Se encontrar modificações estruturais ou arquivos extras na OBB que não deveriam estar lá
         if "patch" in check_obb.lower() and len(check_obb.split("\n")) > 3:
             alertas_encontrados += 1
             detalhes_fraude += "[INTEGRIDADE OBB]: Multiplicidade de pacotes de expansão ativos na partição OBB.\n"
 
         # 5. Varredura Oculta de RAM
-        dados_ram_brutos = executar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector|recoil|aimbot|wallhack|regedit|bytepass|passador|transfer_replay'")
+        dados_ram_brutos = ejecutar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector|recoil|aimbot|wallhack|regedit|bytepass|passador|transfer_replay'")
         dados_ram_filtrados = []
         if dados_ram_brutos:
             for linha in dados_ram_brutos.split("\n"):
@@ -151,12 +146,12 @@ def escanear_jogo(tipo_jogo):
         # 6. Busca por arquivos físicos maliciosos
         termos_busca = "regedit|rege|shift|macro|aim|hs|bypass|cheat|injector|modmenu|lua|holograma|ghost|bytepass|niel"
         pastas_alvo = "/sdcard/ /sdcard/Download/ /sdcard/Android/data/"
-        arquivos_suspeitos = executar_cmd(f"find {pastas_alvo} -maxdepth 4 -type f \( -name '*.lua' -o -name '*.txt' -o -name '*.tmp' -o -name '*.apk' \) 2>/dev/null | grep -Ei '{termos_busca}' | grep -v 'dump_binbinha'")
+        arquivos_suspeitos = ejecutar_cmd(f"find {pastas_alvo} -maxdepth 4 -type f \( -name '*.lua' -o -name '*.txt' -o -name '*.tmp' -o -name '*.apk' \) 2>/dev/null | grep -Ei '{termos_busca}' | grep -v 'dump_binbinha'")
         if arquivos_suspeitos:
             alertas_encontrados += 1
 
         # 7. Rastreamento Logcat de entradas
-        logs_passador = executar_cmd(f"adb logcat -d | grep -Ei 'Sync: push|/data/data/{pacote}/|/files/ffxb/|replays|bytepass|niel' | tail -n 15")
+        logs_passador = ejecutar_cmd(f"adb logcat -d | grep -Ei 'Sync: push|/data/data/{pacote}/|/files/ffxb/|replays|bytepass|niel' | tail -n 15")
         passador_detectado = False
         if logs_passador:
             for log_line in logs_passador.split("\n"):
@@ -164,7 +159,7 @@ def escanear_jogo(tipo_jogo):
                     passador_detectado = True
                     alertas_encontrados += 1
 
-        # Veredito Forense Masculino e Camuflado
+        # Veredito Forense
         if alertas_encontrados > 0:
             status_box = "\033[1;37;41m SISTEMA COMPROMETIDO / DETECTADO \033[0m"
             deteccoes = "Inconsistência Estrutural Crítica"
@@ -223,7 +218,7 @@ def menu_principal():
     while True:
         exibir_banner()
         
-        status_adb = executar_cmd("adb devices | grep -v 'List of' | grep 'device'", timeout_custom=1)
+        status_adb = ejecutar_cmd("adb devices | grep -v 'List of' | grep 'device'", timeout_custom=1)
         
         if status_adb:
             print("  \033[1;35mESTADO ADB\033[0m : \033[1;30;42m ● DISPOSITIVO VINCULADO \033[0m")
@@ -246,7 +241,7 @@ def menu_principal():
             escanear_jogo("Max")
         elif opcao == "3":
             print("\n\033[1;34m[+] Gerando /sdcard/dump_binbinha.txt...\033[0m")
-            executar_cmd("logcat -d > /sdcard/dump_binbinha.txt")
+            ejecutar_cmd("logcat -d > /sdcard/dump_binbinha.txt")
             print("\033[1;32m[✓] Relatório local gerado com sucesso!\033[0m")
             time.sleep(2)
         elif opcao == "S":
