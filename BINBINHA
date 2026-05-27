@@ -32,7 +32,8 @@ def ejecutar_cmd(comando, timeout_custom=15):
 def animar_progresso(etapa, progresso_atual, total_etapas):
     porcentagem = int((progresso_atual / total_etapas) * 100)
     blocos = int(porcentagem / 5)
-    # CORREÇÃO CRÍTICA: Corrigido de blocks/interstate para blocos
+    
+    # Linha corrigida de forma definitiva para evitar o NameError
     barra = "█" * blocos + "░" * (20 - blocos)
     
     exibir_banner()
@@ -74,7 +75,6 @@ def escanear_jogo(tipo_jogo):
         total = 13
         pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
         
-        # MÁSCARA SOCIAL: Phantom Protocol ativo (tudo oculto e disfarçado na tela)
         animar_progresso("Mapeando árvore de processos do Kernel", 1, total)
         animar_progresso("Acessando privilégios e permissões de superusuário", 2, total) 
         animar_progresso("Analisando registros de inicialização e persistência do Kernel", 3, total) 
@@ -93,7 +93,6 @@ def escanear_jogo(tipo_jogo):
         android_version = ejecutar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
         hwid = ejecutar_cmd("adb shell getprop ro.serialno") or "N/A"
         
-        # Alertas e Evidências Ocultas
         alertas_encontrados = 0
         detalhes_fraude = ""
 
@@ -105,7 +104,7 @@ def escanear_jogo(tipo_jogo):
             alertas_encontrados += 1
             detalhes_fraude += f"[ROOT DETECTADO]: Binários administrativos ativos ({check_root[:30]})\n"
 
-        # 2. VERIFICAÇÃO DE UP-TIME (Se reiniciou nos últimos 5 min)
+        # 2. VERIFICAÇÃO DE UP-TIME
         uptime_bruto = ejecutar_cmd("adb shell cat /proc/uptime")
         status_reboot = "✓ Inicialização Estabilizada"
         if uptime_bruto:
