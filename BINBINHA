@@ -28,8 +28,8 @@ def executar_cmd(comando):
 def animar_progresso(etapa, progresso_atual, total_etapas):
     porcentagem = int((progresso_atual / total_etapas) * 100)
     blocos = int(porcentagem / 5)
-    # Barra estilizada usando blocos cheios e vazios
-    barra = "█" * blocks + "░" * (20 - blocks)
+    # Barra estilizada usando blocos cheios e vazios (CORRIGIDO: 'blocos' em toda a estrutura)
+    barra = "█" * blocos + "░" * (20 - blocos)
     
     exibir_banner()
     print(f"\n\033[1;34m: [ {barra} ]  {porcentagem}%  00:04  {progresso_atual}/{total_etapas}\033[0m")
@@ -101,7 +101,7 @@ def escanear_jogo(tipo_jogo):
     
     # Estruturação do veredito final em blocos visuais de destaque
     if dados_ram or arquivos_suspeitos:
-        status_box = "\033[1;37;41m  SISTEMA COMPROMETIDO / TRAÇA DETECTADA  \033[0m"
+        status_box = "\033[1;37;41m  SISTEMA COMPROMETIDO / TRAPAÇA DETECTADA  \033[0m"
         alertas = "1"
         deteccoes = "Injeção ativa detectada"
         msg_final = "\033[1;31m⚠ RISCO DETECTADO: Arquivos ou processos maliciosos violaram o jogo limpo!\033[0m"
@@ -111,7 +111,7 @@ def escanear_jogo(tipo_jogo):
         deteccoes = "Nenhuma anomalia na RAM"
         msg_final = "\033[1;32m✓ Nenhuma detecção suspeita encontrada. O ambiente está 100% seguro.\033[0m"
 
-    # Renderização da tabela tecnológica final (Superior ao visual do concorrente)
+    # Renderização da tabela tecnológica final
     exibir_banner()
     print(f"\n\033[1;36m╔════════════════════════════════════════════════════════════════════╗\033[0m")
     print(f"\033[1;36m║\033[0m  \033[1;37mRELATÓRIO DE PERÍCIA E DEFESA DIGITAL\033[0m                             \033[1;36m║\033[0m")
@@ -135,7 +135,6 @@ def escanear_jogo(tipo_jogo):
     
     print(f"\n{msg_final}\n")
     
-    # Exibe logs de trapaça detalhados se algo for encontrado de verdade
     if dados_ram or arquivos_suspeitos:
         print("\033[1;31m[!] Detalhes técnicos dos rastros encontrados:\033[0m")
         if arquivos_suspeitos: print(f"\033[1;37m{arquivos_suspeitos}\033[0m")
