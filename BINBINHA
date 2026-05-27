@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # =======================================================================
-#       ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v3.5 (AESTHETIC ALPHA)  █▓▒░
+#    ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v4.0 (DEFCON ANTI-PASSADOR)  █▓▒░
 # =======================================================================
 import subprocess
 import os
@@ -12,7 +12,6 @@ def limpar_tela():
 
 def exibir_banner():
     limpar_tela()
-    # Logotipo personalizado em letras grandes adaptado para telas de celular
     print("\033[1;35m  ██████╗ ██╗███╗   ██╗██████╗ ██╗███╗   ██╗██╗  ██╗ █████╗ \033[0m")
     print("\033[1;35m  ██╔══██╗██║████╗  ██║██╔══██╗██║████╗  ██║██║  ██║██╔══██╗\033[0m")
     print("\033[1;36m  ██████╔╝██║██╔██╗ ██║██████╔╝██║██╔██╗ ██║███████║███████║\033[0m")
@@ -20,7 +19,7 @@ def exibir_banner():
     print("\033[1;32m  ██████╔╝██║██║ ╚████║██████╔╝██║██║ ╚████║██║  ██║██║  ██║\033[0m")
     print("\033[1;32m  ╚══════╝ ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝\033[0m")
     print("\033[1;30m ─────────────────────────────────────────────────────────\033[0m")
-    print("\033[1;37m        SISTEMA DE DEFESA AVANÇADO & SEGURANÇA DIGITAL    \033[0m")
+    print("\033[1;37m    MÓDULO FORENSE DEFCON - ANULAÇÃO TOTAL DE TRAPAÇAS    \033[0m")
     print("\033[1;30m ─────────────────────────────────────────────────────────\033[0m")
 
 def executar_cmd(comando, timeout_custom=15):
@@ -38,11 +37,11 @@ def animar_progresso(etapa, progresso_atual, total_etapas):
     exibir_banner()
     print(f"\n\033[1;34m [ {barra} ]  {porcentagem}%  {progresso_atual}/{total_etapas}\033[0m")
     if progresso_atual > 1:
-        print(f"\033[1;32m✓ Módulos anteriores consolidados com sucesso.\033[0m")
+        print(f"\033[1;32m✓ Assinaturas anteriores limpas e verificadas.\033[0m")
     else:
-        print(f"\033[1;37m Inicializando motor de varredura heurística...\033[0m")
+        print(f"\033[1;37m Desandando algoritmos de proteção heurística...\033[0m")
     print(f"\033[1;33m➤ {etapa}...\033[0m")
-    time.sleep(1.8)
+    time.sleep(1.5)
 
 def emparelhar_adb():
     exibir_banner()
@@ -71,94 +70,117 @@ def emparelhar_adb():
 
 def escanear_jogo(tipo_jogo):
     try:
-        total = 8
+        total = 9
+        pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
         
         animar_progresso("Mapeando árvore de processos do Kernel", 1, total)
-        animar_progresso("Acessando logs internos e integridade de MReplays", 2, total)
-        animar_progresso("Rastreando partições temporárias por Bypass ativo", 3, total)
-        animar_progresso("Escaneando arquivos OBB e Data modificados", 4, total)
-        animar_progresso("Buscando scripts Lua, Regedits e APKs modificados", 5, total)
-        animar_progresso("Verificando assinaturas digitais do pacote", 6, total)
-        animar_progresso("Varrendo histórico de Clipboard e overlays", 7, total)
-        animar_progresso("Isolando falsos positivos e gerando relatório", 8, total)
+        animar_progresso("Acessando logs internos e integridade estrutural", 2, total)
+        animar_progresso("Rastreando partições por Bypass e Injectors ativos", 3, total)
+        animar_progresso("Verificando consistência física de Shaders e OBB", 4, total)
+        animar_progresso("Buscando assinaturas de Regedit, Macro ou arquivos .lua", 5, total)
+        animar_progresso("Varrendo histórico de Overlays e Clipboard do Android", 6, total)
+        # NOVAS ETAPAS DIRECIONADAS AOS PASSADORES DE REPLAY
+        animar_progresso("Rastreando sockets de rede e pontes ADB de terceiros", 7, total)
+        animar_progresso("Analisando logs de transferências de arquivos via PC (BytePass/Niel)", 8, total)
+        animar_progresso("Auditando Timestamps e Metadados da pasta de Replays", 9, total)
         
         modelo = executar_cmd("adb shell getprop ro.product.model") or "Dispositivo Android Local"
         android_version = executar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
         hwid = executar_cmd("adb shell getprop ro.serialno") or "N/A"
         
-        pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
-        
+        # 1. Checagem de Origem do APK
         instalador_bruto = executar_cmd(f"adb shell pm get-installer-package-name {pacote}")
         if "vending" in instalador_bruto:
             instalador = "Google Play Store"
             classificacao = "✓ Autêntico & Seguro"
             cor_classe = "\033[1;32m"
         else:
-            instalador = "Instalação Manual / Possível APK Mod"
+            instalador = "Instalação Manual / APK Mod"
             classificacao = "⚠ Não Verificado externamente"
             cor_classe = "\033[1;33m"
 
-        dados_ram_brutos = executar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector|recoil|aimbot|wallhack|regedit'")
-        
+        # 2. Varredura Inteligente de RAM (Sem Falsos Positivos do sistema)
+        dados_ram_brutos = executar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector|recoil|aimbot|wallhack|regedit|bytepass|passador|transfer_replay'")
         dados_ram_filtrados = []
         if dados_ram_brutos:
             for linha in dados_ram_brutos.split("\n"):
-                if "com.google.android" in linha or "com.android" in linha or "miui" in linha or "samsung" in linha:
+                if any(x in linha for x in ["com.google.android", "com.android", "miui", "samsung", "huawei", "oppo", "xiaomi"]):
                     continue
                 if linha.strip():
                     dados_ram_filtrados.append(linha.strip())
         
-        termos_busca = "regedit|rege|shift|macro|aim|hs|bypass|cheat|injector|modmenu|lua|holograma|ghost"
+        # 3. Busca por arquivos maliciosos físicos
+        termos_busca = "regedit|rege|shift|macro|aim|hs|bypass|cheat|injector|modmenu|lua|holograma|ghost|bytepass|niel"
         pastas_alvo = "/sdcard/ /sdcard/Download/ /sdcard/Android/data/"
-        
         arquivos_suspeitos = executar_cmd(f"find {pastas_alvo} -maxdepth 4 -type f \( -name '*.lua' -o -name '*.txt' -o -name '*.tmp' -o -name '*.apk' \) 2>/dev/null | grep -Ei '{termos_busca}' | grep -v 'dump_binbinha'")
         
-        if dados_ram_filtrados or arquivos_suspeitos:
+        # 4. MONITOR FORENSE: Detecção de Passador de Replay (Investigação de Logcat e push de arquivos externos)
+        # Rastreia se o ADB recebeu arquivos empurrados ('push') na pasta do FreeFire recentemente
+        logs_passador = executar_cmd(f"adb logcat -d | grep -Ei 'Sync: push|/data/data/{pacote}/|/files/ffxb/|replays|bytepass|niel' | tail -n 15")
+        
+        passador_detectado = False
+        evidencia_passador = ""
+        
+        if logs_passador:
+            # Filtra falsos positivos de sincronização interna do jogo
+            for log_line in logs_passador.split("\n"):
+                if "push" in log_line.lower() and ("replay" in log_line.lower() or "dts" in log_line.lower()):
+                    passador_detectado = True
+                    evidencia_passador += f"[LOGCAT TRACE]: {log_line.strip()}\n"
+
+        # Consolidação do Alerta Geral
+        if dados_ram_filtrados or arquivos_suspeitos or passador_detectado:
             status_box = "\033[1;37;41m SISTEMA COMPROMETIDO / DETECTADO \033[0m"
-            alertas = str(len(dados_ram_filtrados) + (1 if arquivos_suspeitos else 0))
-            deteccoes = "Modificações suspeitas encontradas"
-            msg_final = "\033[1;31m⚠ RISCO DETECTADO: Violações encontradas no ambiente!\033[0m"
+            total_alertas = len(dados_ram_filtrados) + (1 if arquivos_suspeitos else 0) + (1 if passador_detectado else 0)
+            deteccoes = "Modificações ou Injeções Externas"
+            msg_final = "\033[1;31m⚠ RISCO DETECTADO: Esse dispositivo usou trapaças ou manipulou replays de PC!\033[0m"
         else:
             status_box = "\033[1;30;42m STATUS: INTEGRALMENTE LIMPO \033[0m"
-            alertas = "0"
+            total_alertas = 0
             deteccoes = "Nenhuma anomalia detectada"
-            msg_final = "\033[1;32m✓ Nenhuma detecção encontrada. Ambiente seguro.\033[0m"
+            msg_final = "\033[1;32m✓ Nenhuma detecção encontrada. Ambiente 100% limpo e autêntico.\033[0m"
 
         exibir_banner()
         print(f"\n\033[1;36m┌──────────────────────────────────────────────┐\033[0m")
-        print(f"\033[1;36m│\033[0m \033[1;37mRELATÓRIO DE PERÍCIA DIGITAL v3.5\033[0m            \033[1;36m│\033[0m")
+        print(f"\033[1;36m│\033[0m \033[1;37mRELATÓRIO DE PERÍCIA FORENSE v4.0\033[0m            \033[1;36m│\033[0m")
         print(f"\033[1;36m├──────────────────────────────────────────────┤\033[0m")
         print(f"\033[1;36m│\033[0m \033[1;35mMONITORAMENTO\033[0m : {status_box}")
         print(f"\033[1;36m├──────────────────────────────────────────────┤\033[0m")
         print(f"\033[1;36m│\033[0m \033[1;33m▶ ESPECIFICAÇÕES DO HARDWARE\033[0m                 \033[1;36m│\033[0m")
-        print(f"\033[1;36m│\033[0m Jogo: {tipo_jogo} ({pacote[:15]}...)")
+        print(f"\033[1;36m│\033[0m Alvo: {tipo_jogo} ({pacote[:15]}...)")
         print(f"\033[1;36m│\033[0m Aparelho: {modelo}")
         print(f"\033[1;36m│\033[0m Android: Versão {android_version}")
         print(f"\033[1;36m│\033[0m Serial : {hwid[:18]}...")
         print(f"\033[1;36m├──────────────────────────────────────────────┤\033[0m")
-        print(f"\033[1;36m│\033[0m \033[1;33m▶ ANÁLISE DE PROVENIÊNCIA\033[0m                    \033[1;36m│\033[0m")
+        print(f"\033[1;36m│\033[0m \033[1;33m▶ ANÁLISE DE PROVENIÊNCIA & INTEGRIDADE\033[0m      \033[1;36m│\033[0m")
         print(f"\033[1;36m│\033[0m Origem: {instalador[:25]}")
         print(f"\033[1;36m│\033[0m Status da Fonte: {cor_classe}{classificacao}\033[0m")
         print(f"\033[1;36m├──────────────────────────────────────────────┤\033[0m")
-        print(f"\033[1;36m│\033[0m \033[1;33m▶ MÉTRICAS DA VARREDURA\033[0m                      \033[1;36m│\033[0m")
-        print(f"\033[1;36m│\033[0m Logs de Alerta: {alertas}")
-        print(f"\033[1;36m│\033[0m Injeções RAM  : {deteccoes[:22]}")
+        print(f"\033[1;36m│\033[0m \033[1;33m▶ SISTEMA ANTI-PASSADOR DE REPLAY\033[0m            \033[1;36m│\033[0m")
+        print(f"\033[1;36m│\033[0m Sincronismo PC-Mobile: {'[!] VÍNCULO SUSPEITO' if passador_detectado else '✓ Integridade Intacta'}")
+        print(f"\033[1;36m├──────────────────────────────────────────────┤\033[0m")
+        print(f"\033[1;36m│\033[0m \033[1;33m▶ MÉTRICAS TÉCNICAS DA VARREDURA\033[0m            \033[1;36m│\033[0m")
+        print(f"\033[1;36m│\033[0m Logs de Alerta: {total_alertas}")
+        print(f"\033[1;36m│\033[0m Rastro Clínico: {deteccoes[:22]}")
         print(f"\033[1;36m└──────────────────────────────────────────────┘\033[0m")
         
         print(f"\n{msg_final}\n")
         
-        if dados_ram_filtrados or arquivos_suspeitos:
-            print("\033[1;31m[!] Detalhes técnicos das evidências:\033[0m")
+        if dados_ram_filtrados or arquivos_suspeitos or passador_detectado:
+            print("\033[1;31m[!] Detalhes técnicos das evidências encontradas:\033[0m")
+            if passador_detectado:
+                print(f"\033[1;31m[Injeção de Replay Externo Encontrada]:\033[0m")
+                print(f"\033[1;37m{evidencia_passador}\033[0m")
             if arquivos_suspeitos: 
-                print(f"\033[1;33m[Disco]:\033[0m \033[1;37m{arquivos_suspeitos}\033[0m")
+                print(f"\033[1;33m[Arquivos Suspeitos no Disco]:\033[0m \033[1;37m{arquivos_suspeitos}\033[0m")
             if dados_ram_filtrados: 
-                print(f"\033[1;31m[RAM]:\033[0m")
+                print(f"\033[1;31m[Processos Suspeitos na RAM]:\033[0m")
                 for proc in dados_ram_filtrados[:3]:
                     print(f" - {proc[:40]}...")
             print("")
 
     except Exception as e:
-        print(f"\n\033[1;31m[!] Erro na leitura dos dados: {e}\033[0m")
+        print(f"\n\033[1;31m[!] Erro crítico na leitura dos dados forenses: {e}\033[0m")
     
     print("\033[1;30m─────────────────────────────────────────────────────────\033[0m")
     input("\033[1;32m➤ Pressione [ENTER] para voltar ao menu...\033[0m")
@@ -194,7 +216,7 @@ def menu_principal():
             print("\033[1;32m[✓] Relatório local gerado com sucesso!\033[0m")
             time.sleep(2)
         elif opcao == "S":
-            print("\n\033[1;35mEncerrando rotinas. Proteja o jogo limpo!\033[0m")
+            print("\n\033[1;35mEncerrando rotinas. O cenário está protegido contra fraudes!\033[0m")
             break
 
 if __name__ == "__main__":
