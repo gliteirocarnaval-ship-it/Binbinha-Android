@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # =======================================================================
-#       ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v2.0 (CYBER-DEFENSE)  █▓▒░
+#       ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v2.5 (FAST-LOOP)  █▓▒░
 # =======================================================================
 import subprocess
 import os
@@ -12,9 +12,8 @@ def limpar_tela():
 
 def exibir_banner():
     limpar_tela()
-    # Visual tecnológico em Ciano (Azul Claro) e Roxo/Magenta
     print("\033[1;36m╔════════════════════════════════════════════════════════════════════╗\033[0m")
-    print("\033[1;36m║\033[0m  \033[1;35m      ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v2.0  █▓▒░      \033[0m  \033[1;36m║\033[0m")
+    print("\033[1;36m║\033[0m  \033[1;35m      ░▒▓█  SCANNER BINBINHA ANTI-CHEAT v2.5  █▓▒░      \033[0m  \033[1;36m║\033[0m")
     print("\033[1;36m║\033[0m  \033[1;32m         SISTEMA DE DEFESA AVANÇADO & SEGURANÇA DIGITAL    \033[0m  \033[1;36m║\033[0m")
     print("\033[1;36m╚════════════════════════════════════════════════════════════════════╝\033[0m")
 
@@ -28,7 +27,6 @@ def executar_cmd(comando):
 def animar_progresso(etapa, progresso_atual, total_etapas):
     porcentagem = int((progresso_atual / total_etapas) * 100)
     blocos = int(porcentagem / 5)
-    # Barra estilizada usando blocos cheios e vazios (CORRIGIDO: 'blocos' em toda a estrutura)
     barra = "█" * blocos + "░" * (20 - blocos)
     
     exibir_banner()
@@ -38,7 +36,7 @@ def animar_progresso(etapa, progresso_atual, total_etapas):
     else:
         print(f"\033[1;37m Inicializando rotinas de segurança...\033[0m")
     print(f"\033[1;33m➤ {etapa}...\033[0m")
-    time.sleep(1.4)
+    time.sleep(1.2)
 
 def emparelhar_adb():
     exibir_banner()
@@ -66,87 +64,86 @@ def emparelhar_adb():
         input("\nPressione [Enter] para retornar...")
 
 def escanear_jogo(tipo_jogo):
-    total = 7
-    
-    # Execução sequencial da perícia digital do sistema
-    animar_progresso("Identificando assinatura do aparelho e ambiente Kernel", 1, total)
-    animar_progresso("Analisando logs ocultos e pastas de MReplays", 2, total)
-    animar_progresso("Escaneando memória RAM em busca de bypass de Wallhack/Holograma", 3, total)
-    animar_progresso("Checando integridade de Shaders injetados (.obb/.data)", 4, total)
-    animar_progresso("Verificando hashes das diretrizes de segurança de pacotes", 5, total)
-    animar_progresso("Monitorando processos em segundo plano e área de transferência", 6, total)
-    animar_progresso("Concluindo varredura profunda e compilando logcat", 7, total)
-    
-    # Coleta de metadados reais do celular via comandos Shell ADB
-    modelo = executar_cmd("adb shell getprop ro.product.model") or "Dispositivo Android Local"
-    android_version = executar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
-    hwid = executar_cmd("adb shell getprop ro.serialno") or "N/A"
-    
-    pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
-    
-    # Inspeção da procedência do pacote instalado
-    instalador_bruto = executar_cmd(f"adb shell pm get-installer-package-name {pacote}")
-    if "vending" in instalador_bruto:
-        instalador = "Google Play Store"
-        classificacao = "✓ Autêntico & Seguro"
-        cor_classe = "\033[1;32m"
-    else:
-        instalador = "Instalação Manual / Possível APK Modificado"
-        classificacao = "⚠ Não Verificado externamente"
-        cor_classe = "\033[1;33m"
+    try:
+        total = 7
+        
+        animar_progresso("Identificando assinatura do aparelho e ambiente Kernel", 1, total)
+        animar_progresso("Analisando logs ocultos e pastas de MReplays", 2, total)
+        animar_progresso("Escaneando memória RAM em busca de bypass de Wallhack/Holograma", 3, total)
+        animar_progresso("Checando integridade de Shaders injetados (.obb/.data)", 4, total)
+        animar_progresso("Verificando hashes das diretrizes de segurança de pacotes", 5, total)
+        animar_progresso("Monitorando processos em segundo plano e área de transferência", 6, total)
+        animar_progresso("Concluindo varredura profunda e compilando logcat", 7, total)
+        
+        modelo = executar_cmd("adb shell getprop ro.product.model") or "Dispositivo Android Local"
+        android_version = executar_cmd("adb shell getprop ro.build.version.release") or "Desconhecido"
+        hwid = executar_cmd("adb shell getprop ro.serialno") or "N/A"
+        
+        pacote = "com.dts.freefireth" if tipo_jogo == "Normal" else "com.dts.freefiremax"
+        
+        instalador_bruto = executar_cmd(f"adb shell pm get-installer-package-name {pacote}")
+        if "vending" in instalador_bruto:
+            instalador = "Google Play Store"
+            classificacao = "✓ Autêntico & Seguro"
+            cor_classe = "\033[1;32m"
+        else:
+            instalador = "Instalação Manual / Possível APK Modificado"
+            classificacao = "⚠ Não Verificado externamente"
+            cor_classe = "\033[1;33m"
 
-    # SISTEMA DE DEFESA ATIVO: Varredura detalhada na memória RAM e arquivos confidenciais
-    dados_ram = executar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector'")
-    arquivos_suspeitos = executar_cmd("find /sdcard/Android/data/ -type f \( -name '*.lua' -o -name '*regedit*' -o -name '*.tmp' \) 2>/dev/null | grep -i 'freefire'")
-    
-    # Estruturação do veredito final em blocos visuais de destaque
-    if dados_ram or arquivos_suspeitos:
-        status_box = "\033[1;37;41m  SISTEMA COMPROMETIDO / TRAPAÇA DETECTADA  \033[0m"
-        alertas = "1"
-        deteccoes = "Injeção ativa detectada"
-        msg_final = "\033[1;31m⚠ RISCO DETECTADO: Arquivos ou processos maliciosos violaram o jogo limpo!\033[0m"
-    else:
-        status_box = "\033[1;30;42m  STATUS: INTEGRALMENTE LIMPO / JOGO LIMPO  \033[0m"
-        alertas = "0"
-        deteccoes = "Nenhuma anomalia na RAM"
-        msg_final = "\033[1;32m✓ Nenhuma detecção suspeita encontrada. O ambiente está 100% seguro.\033[0m"
+        dados_ram = executar_cmd("adb shell dumpsys activity processes | grep -Ei 'cheat|modmenu|gameguardian|bypass|injector'")
+        arquivos_suspeitos = executar_cmd("find /sdcard/Android/data/ -type f \( -name '*.lua' -o -name '*regedit*' -o -name '*.tmp' \) 2>/dev/null | grep -i 'freefire'")
+        
+        if dados_ram or arquivos_suspeitos:
+            status_box = "\033[1;37;41m  SISTEMA COMPROMETIDO / TRAPAÇA DETECTADA  \033[0m"
+            alertas = "1"
+            deteccoes = "Injeção ativa detectada"
+            msg_final = "\033[1;31m⚠ RISCO DETECTADO: Arquivos ou processos maliciosos violaram o jogo limpo!\033[0m"
+        else:
+            status_box = "\033[1;30;42m  STATUS: INTEGRALMENTE LIMPO / JOGO LIMPO  \033[0m"
+            alertas = "0"
+            deteccoes = "Nenhuma anomalia na RAM"
+            msg_final = "\033[1;32m✓ Nenhuma detecção suspeita encontrada. O ambiente está 100% seguro.\033[0m"
 
-    # Renderização da tabela tecnológica final
-    exibir_banner()
-    print(f"\n\033[1;36m╔════════════════════════════════════════════════════════════════════╗\033[0m")
-    print(f"\033[1;36m║\033[0m  \033[1;37mRELATÓRIO DE PERÍCIA E DEFESA DIGITAL\033[0m                             \033[1;36m║\033[0m")
-    print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
-    print(f"\033[1;36m║\033[0m  \033[1;35mMONITORAMENTO\033[0m : {status_box}                       \033[1;36m║\033[0m")
-    print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
-    print(f"\033[1;36m║\033[0m  \033[1;33m▶ ESPECIFICAÇÕES DO HARDWARE\033[0m                                       \033[1;36m║\033[0m")
-    print(f"\033[1;36m║\033[0m  Plataforma-Alvo  : {pacote} ({tipo_jogo})")
-    print(f"\033[1;36m║\033[0m  Hardware / Model : {modelo}")
-    print(f"\033[1;36m║\033[0m  Firmware Android : Versão {android_version}")
-    print(f"\033[1;36m║\033[0m  Hardware Serial  : {hwid[:20]}...")
-    print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
-    print(f"\033[1;36m║\033[0m  \033[1;33m▶ ANÁLISE DE PROVENIÊNCIA\033[0m                                          \033[1;36m║\033[0m")
-    print(f"\033[1;36m║\033[0m  Origem de Fonte  : {instalador}")
-    print(f"\033[1;36m║\033[0m  Classificação    : {cor_classe}{classificacao}\033[0m")
-    print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
-    print(f"\033[1;36m║\033[0m  \033[1;33m▶ MÉTRICAS DA VARREDURA DE SEGURANÇA\033[0m                               \033[1;36m║\033[0m")
-    print(f"\033[1;36m║\033[0m  Logs de Alerta   : {alertas}")
-    print(f"\033[1;36m║\033[0m  Injeções de RAM  : {deteccoes}")
-    print(f"\033[1;36m╚════════════════════════════════════════════════════════════════════╝\033[0m")
-    
-    print(f"\n{msg_final}\n")
-    
-    if dados_ram or arquivos_suspeitos:
-        print("\033[1;31m[!] Detalhes técnicos dos rastros encontrados:\033[0m")
-        if arquivos_suspeitos: print(f"\033[1;37m{arquivos_suspeitos}\033[0m")
-        if dados_ram: print(f"\033[1;37m{dados_ram}\033[0m")
-        print("")
+        exibir_banner()
+        print(f"\n\033[1;36m╔════════════════════════════════════════════════════════════════════╗\033[0m")
+        print(f"\033[1;36m║\033[0m  \033[1;37mRELATÓRIO DE PERÍCIA E DEFESA DIGITAL\033[0m                             \033[1;36m║\033[0m")
+        print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
+        print(f"\033[1;36m║\033[0m  \033[1;35mMONITORAMENTO\033[0m : {status_box}                       \033[1;36m║\033[0m")
+        print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
+        print(f"\033[1;36m║\033[0m  \033[1;33m▶ ESPECIFICAÇÕES DO HARDWARE\033[0m                                       \033[1;36m║\033[0m")
+        print(f"\033[1;36m║\033[0m  Plataforma-Alvo  : {pacote} ({tipo_jogo})")
+        print(f"\033[1;36m║\033[0m  Hardware / Model : {modelo}")
+        print(f"\033[1;36m║\033[0m  Firmware Android : Versão {android_version}")
+        print(f"\033[1;36m║\033[0m  Hardware Serial  : {hwid[:20]}...")
+        print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
+        print(f"\033[1;36m║\033[0m  \033[1;33m▶ ANÁLISE DE PROVENIÊNCIA\033[0m                                          \033[1;36m║\033[0m")
+        print(f"\033[1;36m║\033[0m  Origem de Fonte  : {instalador}")
+        print(f"\033[1;36m║\033[0m  Classificação    : {cor_classe}{classificacao}\033[0m")
+        print(f"\033[1;36m╠════════════════════════════════════════════════════════════════════╣\033[0m")
+        print(f"\033[1;36m║\033[0m  \033[1;33m▶ MÉTRICAS DA VARREDURA DE SEGURANÇA\033[0m                               \033[1;36m║\033[0m")
+        print(f"\033[1;36m║\033[0m  Logs de Alerta   : {alertas}")
+        print(f"\033[1;36m║\033[0m  Injeções de RAM  : {deteccoes}")
+        print(f"\033[1;36m╚════════════════════════════════════════════════════════════════════╝\033[0m")
+        
+        print(f"\n{msg_final}\n")
+        
+        if dados_ram or arquivos_suspeitos:
+            print("\033[1;31m[!] Detalhes técnicos dos rastros encontrados:\033[0m")
+            if arquivos_suspeitos: print(f"\033[1;37m{arquivos_suspeitos}\033[0m")
+            if dados_ram: print(f"\033[1;37m{dados_ram}\033[0m")
+            print("")
 
-    input("\033[1;37mPressione [Enter] para retornar ao centro de comando...\033[0m")
+    except Exception as e:
+        print(f"\n\033[1;31m[!] Ocorreu uma interrupção na leitura de dados: {e}\033[0m")
+        print("\033[1;32m[✓] Sistema de Defesa reteve a falha para evitar o fechamento.\033[0m")
+    
+    print("\033[1;37m────────────────────────────────────────────────────────────────────\033[0m")
+    input("\033[1;32m➤ Pressione [ENTER] para retornar ao painel principal de forma rápida...\033[0m")
 
 def menu_principal():
     while True:
         exibir_banner()
-        # Escaneia em tempo real o barramento ADB do Termux
         status_adb = executar_cmd("adb devices | grep -v 'List of' | grep 'device'")
         
         if status_adb:
